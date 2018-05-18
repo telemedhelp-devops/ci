@@ -31,5 +31,5 @@ ln -s /home/site/go/src/gitlab.telemed.help/devops/ci/doc/nginx.conf /etc/nginx/
 
 nginx -s reload
 
-sudo -u site /home/go/bin/ci
+sudo -u site /home/site/go/bin/ci
 ```
