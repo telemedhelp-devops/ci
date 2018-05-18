@@ -2,8 +2,10 @@ package main
 
 import (
 	m "gitlab.telemed.help/devops/ci/serverMethods"
+	cfg "gitlab.telemed.help/devops/ci/config"
 	"gitlab.telemed.help/devops/ci/gitlabAuth"
 	mw "gitlab.telemed.help/devops/ci/serverMethods/middleware"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +15,10 @@ func setupRouter(r *gin.Engine) {
 }
 
 func setupJsonRouter(r *gin.Engine) {
+	store := sessions.NewCookieStore([]byte(cfg.Get().Secret))
+
 	authed := r.Group("/")
+	authed.Use(sessions.Sessions("SESS", store))
 	authed.Use(mw.RequireAuthed) // some routines for an already authed
 
 	// Auth
