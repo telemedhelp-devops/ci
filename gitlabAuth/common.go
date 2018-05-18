@@ -2,14 +2,22 @@ package gitlabAuth
 
 import (
 	"github.com/markbates/goth"
-	cfg "gitlab.telemed.help/devops/ci/config"
 	"github.com/markbates/goth/providers/gitlab"
+	cfg "gitlab.telemed.help/devops/ci/config"
 )
 
-func init() {
+func Init() {
 	config := cfg.Get()
 
 	goth.UseProviders(
-		gitlab.New(config.GitLab.Key, config.GitLab.Secret, config.BaseURL+"/gitlab/callback"),
+		gitlab.NewCustomisedURL(
+			config.GitLab.Key,
+			config.GitLab.Secret,
+			config.BaseURL+"/auth/gitlab/callback",
+			config.GitLab.URL+"/oauth/authorize",
+			config.GitLab.URL+"/oauth/token",
+			config.GitLab.URL+"/api/v3/user",
+			"read_user",
+		),
 	)
 }

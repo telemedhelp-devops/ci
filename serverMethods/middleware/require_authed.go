@@ -1,8 +1,8 @@
 package middleware
 
 import (
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/contrib/sessions"
 	m "gitlab.telemed.help/devops/ci/models"
 )
 

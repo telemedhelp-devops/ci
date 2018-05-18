@@ -17,6 +17,7 @@ type DbCfg struct {
 }
 
 type GitLabCfg struct {
+	URL    string `yaml:"url"`
 	Key    string
 	Secret string
 }

@@ -7,4 +7,3 @@ import (
 type User struct {
 	GitLabUser goth.User
 }
-

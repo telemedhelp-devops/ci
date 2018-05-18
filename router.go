@@ -1,12 +1,14 @@
 package main
 
 import (
-	m "gitlab.telemed.help/devops/ci/serverMethods"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
+	"github.com/markbates/goth/gothic"
 	cfg "gitlab.telemed.help/devops/ci/config"
 	"gitlab.telemed.help/devops/ci/gitlabAuth"
+	m "gitlab.telemed.help/devops/ci/serverMethods"
 	mw "gitlab.telemed.help/devops/ci/serverMethods/middleware"
-	"github.com/gin-gonic/contrib/sessions"
-	"github.com/gin-gonic/gin"
 )
 
 func setupRouter(r *gin.Engine) {
@@ -15,18 +17,23 @@ func setupRouter(r *gin.Engine) {
 }
 
 func setupJsonRouter(r *gin.Engine) {
-	store := sessions.NewCookieStore([]byte(cfg.Get().Secret))
+	store := cookie.NewStore([]byte(cfg.Get().Secret))
+	gothic.Store = store
+
+	r.Use(sessions.Sessions("SESS", store))
 
 	authed := r.Group("/")
 	authed.Use(sessions.Sessions("SESS", store))
 	authed.Use(mw.RequireAuthed) // some routines for an already authed
 
 	// Auth
-	r.GET("/gitlab/callback", gitlabAuth.Callback)
+	r.GET("/auth/gitlab/login", gitlabAuth.Login)
+	r.GET("/auth/gitlab/callback", gitlabAuth.Callback)
 
 	// My methods
 	r.GET("/ping.json", m.Ping)
 	authed.GET("/whoami.json", m.Whoami)
+	authed.GET("/pipelines.json", m.Pipelines)
 }
 
 func setupFrontendRouter(r *gin.Engine) {

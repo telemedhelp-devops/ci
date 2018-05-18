@@ -3,12 +3,12 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	cfg "gitlab.telemed.help/devops/ci/config"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/xaionaro/reform"
 	"github.com/xaionaro/reform/dialects/mysql"
 	"github.com/xaionaro/reform/dialects/sqlite3"
+	cfg "gitlab.telemed.help/devops/ci/config"
 	"time"
 )
 

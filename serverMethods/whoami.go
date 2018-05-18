@@ -1,8 +1,8 @@
 package serverMethods
 
 import (
-	"gitlab.telemed.help/devops/ci/serverMethods/helpers"
 	"github.com/gin-gonic/gin"
+	"gitlab.telemed.help/devops/ci/serverMethods/helpers"
 )
 
 func Whoami(c *gin.Context) {
