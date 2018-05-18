@@ -1,0 +1,13 @@
+base_url: https://ci.myorganization.com
+secret: someSecretHere
+gitlab:
+  key: GitLab-key
+  secret: GitLab-secret
+db:
+  driver: mysql
+  protocol: tcp
+  host: localhost
+  port: 3306
+  db: ci
+  user: ci
+  password: somePasswordHere
