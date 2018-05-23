@@ -18,12 +18,18 @@ func setupRouter(r *gin.Engine) {
 
 func setupJsonRouter(r *gin.Engine) {
 	store := cookie.NewStore([]byte(cfg.Get().Secret))
+	store.Options(sessions.Options{
+		Secure:   !cfg.Get().IsDev,
+		Path:     "/",
+		HttpOnly: true,
+		MaxAge:   86400 * 30 * 3, // 3 months
+	})
+
 	gothic.Store = store
 
-	r.Use(sessions.Sessions("SESS", store))
+	r.Use(sessions.Sessions("session", store))
 
 	authed := r.Group("/")
-	authed.Use(sessions.Sessions("SESS", store))
 	authed.Use(mw.RequireAuthed) // some routines for an already authed
 
 	// Auth

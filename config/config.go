@@ -23,6 +23,7 @@ type GitLabCfg struct {
 }
 
 type Config struct {
+	IsDev   bool      `yaml:"development_mode"`
 	BaseURL string    `yaml:"base_url"`
 	Secret  string    `yaml:"secret"`
 	GitLab  GitLabCfg `yaml:"gitlab"`

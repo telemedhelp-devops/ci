@@ -1,3 +1,4 @@
+development_mode: false
 base_url: https://ci.myorganization.com
 secret: someSecretHere
 gitlab:
