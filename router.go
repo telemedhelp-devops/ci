@@ -38,6 +38,7 @@ func setupJsonRouter(r *gin.Engine) {
 
 	// My methods
 	r.GET("/ping.json", m.Ping)
+	r.GET("/simpleApi/wantToDeploy/:project/:tag", m.WantToDeploy)
 	authed.GET("/whoami.json", m.Whoami)
 	authed.GET("/pipelines.json", m.Pipelines)
 }

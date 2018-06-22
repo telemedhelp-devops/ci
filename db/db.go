@@ -37,7 +37,7 @@ func initDB(params InitDBParams) (db *reform.DB) {
 	return
 }
 
-func GetDB(dbBlockName string) *reform.DB {
+func GetDB() *reform.DB {
 	return db
 }
 
