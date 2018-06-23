@@ -11,6 +11,10 @@ func Pipelines(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
+
+	models.Pipelines(pipelines).PrepareApprovals()
+	models.Pipelines(pipelines).PrepareRequiredApprovals()
+
 	//me := helpers.GetMe(c)
 
 	c.JSON(200, gin.H{

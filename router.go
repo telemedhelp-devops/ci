@@ -41,12 +41,15 @@ func setupJsonRouter(r *gin.Engine) {
 	r.GET("/simpleApi/wantToDeploy/:project/:tag", m.WantToDeploy)
 	authed.GET("/whoami.json", m.Whoami)
 	authed.GET("/pipelines.json", m.Pipelines)
+	authed.DELETE("/pipelines.json", m.DeletePipeline)
+	authed.PATCH("/pipelines.json", m.PatchPipeline)
 }
 
 func setupFrontendRouter(r *gin.Engine) {
 	r.Static("/frontend", "frontend/build")
 	r.Static("/static", "frontend/build/static")
 	r.Static("/css", "frontend/build/css")
+	r.Static("/fonts", "frontend/public/fonts")
 	r.StaticFile("/", "frontend/build/index.html")
 	//r.StaticFile("/projects/:project_id/approveDeploy", "frontend/build/index.html")
 }
