@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xaionaro-go/extime"
 	"gitlab.telemed.help/devops/ci/models"
 	"gitlab.telemed.help/devops/ci/serverMethods/helpers"
-	"github.com/xaionaro-go/extime"
 )
 
 type DeletePipelineParams struct {
@@ -20,7 +20,7 @@ func DeletePipeline(c *gin.Context) {
 	err := c.ShouldBindJSON(&params)
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Invalid JSON body: `+err.Error(),
+			"error": `Invalid JSON body: ` + err.Error(),
 		})
 		return
 	}
@@ -28,7 +28,7 @@ func DeletePipeline(c *gin.Context) {
 	requiredApprovals, err := models.RequiredApprovalSQL.Select(models.RequiredApproval{Username: strings.ToLower(me.GitLabUser.NickName)})
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot get my projects: `+err.Error(),
+			"error": `Cannot get my projects: ` + err.Error(),
 		})
 		return
 	}
@@ -40,7 +40,7 @@ func DeletePipeline(c *gin.Context) {
 	pipeline, err := models.PipelineSQL.Where("`project_name` IN (?)", rwProjectNames).First(models.Pipeline{Id: params.Id})
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot delete the pipeline: `+err.Error(),
+			"error": `Cannot delete the pipeline: ` + err.Error(),
 		})
 		return
 	}
@@ -49,7 +49,7 @@ func DeletePipeline(c *gin.Context) {
 	err = pipeline.Update()
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot delete the pipeline: `+err.Error(),
+			"error": `Cannot delete the pipeline: ` + err.Error(),
 		})
 		return
 	}

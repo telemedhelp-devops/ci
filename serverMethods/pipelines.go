@@ -14,7 +14,7 @@ func Pipelines(c *gin.Context) {
 	pipelines, err = models.PipelineSQL.Select("`deleted_at` IS NULL AND `approved_at` IS NULL")
 	if err != nil && err != sql.ErrNoRows {
 		c.JSON(502, gin.H{
-			"error": `Cannot fetch pipelines: `+err.Error(),
+			"error": `Cannot fetch pipelines: ` + err.Error(),
 		})
 		return
 	}

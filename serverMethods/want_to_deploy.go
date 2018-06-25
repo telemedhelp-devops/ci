@@ -3,8 +3,8 @@ package serverMethods
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"gitlab.telemed.help/devops/ci/models"
 	"github.com/xaionaro-go/extime"
+	"gitlab.telemed.help/devops/ci/models"
 )
 
 func WantToDeploy(c *gin.Context) {

@@ -12,11 +12,11 @@ import (
 )
 
 func setupRouter(r *gin.Engine) {
-	setupJsonRouter(r)
+	setupJSONRouter(r)
 	setupFrontendRouter(r)
 }
 
-func setupJsonRouter(r *gin.Engine) {
+func setupJSONRouter(r *gin.Engine) {
 	store := cookie.NewStore([]byte(cfg.Get().Secret))
 	store.Options(sessions.Options{
 		Secure:   !cfg.Get().IsDev,

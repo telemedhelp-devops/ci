@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/xaionaro-go/extime"
 	"gitlab.telemed.help/devops/ci/models"
 	"gitlab.telemed.help/devops/ci/serverMethods/helpers"
-	"github.com/xaionaro-go/extime"
 )
 
 type PatchPipelineParams struct {
@@ -21,19 +21,19 @@ func PatchPipeline(c *gin.Context) {
 	err := c.ShouldBindJSON(&params)
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Invalid JSON body: `+err.Error(),
+			"error": `Invalid JSON body: ` + err.Error(),
 		})
 		return
 	}
 
 	err = (&models.Approval{
-		Username: strings.ToLower(me.GitLabUser.NickName),
+		Username:   strings.ToLower(me.GitLabUser.NickName),
 		PipelineId: params.Id,
-		CreatedAt: &[]extime.Time{extime.Now()}[0],
+		CreatedAt:  &[]extime.Time{extime.Now()}[0],
 	}).Create()
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot create the approval: `+err.Error(),
+			"error": `Cannot create the approval: ` + err.Error(),
 		})
 		return
 	}
@@ -41,7 +41,7 @@ func PatchPipeline(c *gin.Context) {
 	pipeline, err := models.PipelineSQL.First(models.Pipeline{Id: params.Id})
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot fetch the pipeline info: `+err.Error(),
+			"error": `Cannot fetch the pipeline info: ` + err.Error(),
 		})
 		return
 	}
@@ -49,7 +49,7 @@ func PatchPipeline(c *gin.Context) {
 	requiredApprovals, err := models.RequiredApprovalSQL.Select(models.RequiredApproval{ProjectName: pipeline.ProjectName})
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot fetch current required approvals: `+err.Error(),
+			"error": `Cannot fetch current required approvals: ` + err.Error(),
 		})
 		return
 	}
@@ -64,7 +64,7 @@ func PatchPipeline(c *gin.Context) {
 	approvals, err := models.ApprovalSQL.Select(models.Approval{PipelineId: pipeline.Id})
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot fetch current approvals: `+err.Error(),
+			"error": `Cannot fetch current approvals: ` + err.Error(),
 		})
 		return
 	}
@@ -77,7 +77,7 @@ func PatchPipeline(c *gin.Context) {
 	for approvementGroupId, isApproved := range satisfiedApprovementGroupMap {
 		if !isApproved {
 			c.JSON(200, gin.H{
-				"Status": "ok",
+				"Status":  "ok",
 				"Comment": fmt.Sprintf("approvement group %v has not approvals, yet", approvementGroupId),
 			})
 			return
@@ -88,7 +88,7 @@ func PatchPipeline(c *gin.Context) {
 	err = pipeline.Update()
 	if err != nil {
 		c.JSON(502, gin.H{
-			"error": `Cannot update the pipeline info: `+err.Error(),
+			"error": `Cannot update the pipeline info: ` + err.Error(),
 		})
 		return
 	}
