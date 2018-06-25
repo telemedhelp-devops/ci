@@ -13,6 +13,7 @@ type Pipeline struct {
 	TagName     string       `reform:"tag_name" sql_size:"255"`
 	CreatedAt   *extime.Time `reform:"created_at"`
 	ApprovedAt  *extime.Time `reform:"approved_at"`
+	DeletedAt   *extime.Time `reform:"deleted_at"`
 
 	Approvals         Approvals         `reform:"-"`
 	RequiredApprovals RequiredApprovals `reform:"-"`
@@ -45,7 +46,7 @@ func (pipelines Pipelines) PrepareApprovals() Pipelines {
 }
 
 func (pipelines Pipelines) PrepareRequiredApprovals() Pipelines {
-	projectNames:= []string{}
+	projectNames := []string{}
 	pipelineMap := map[string][]*Pipeline{}
 	for idx, pipeline := range pipelines {
 		projectNames = append(projectNames, pipeline.ProjectName)
@@ -69,4 +70,3 @@ func (pipelines Pipelines) PrepareRequiredApprovals() Pipelines {
 
 	return pipelines
 }
-

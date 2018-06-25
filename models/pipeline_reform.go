@@ -55,7 +55,7 @@ func (v pipelineTableTypeType) Name() string {
 
 // Columns returns a new slice of column names for that view or table in SQL database.
 func (v pipelineTableTypeType) Columns() []string {
-	return []string{"id", "project_name", "tag_name", "created_at", "approved_at"}
+	return []string{"id", "project_name", "tag_name", "created_at", "approved_at", "deleted_at"}
 }
 
 // NewStruct makes a new struct for that view or table.
@@ -90,7 +90,7 @@ func (v pipelineTableTypeType) StructInfo() reform.StructInfo {
 
 // PipelineTable represents pipelines view or table in SQL database.
 var PipelineTable = &pipelineTableTypeType{
-	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
+	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "DeletedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "deleted_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
 	z: new(Pipeline).Values(),
 }
 
@@ -108,7 +108,7 @@ func (v *pipelineTableTypeType_log) Name() string {
 }
 
 func (v *pipelineTableTypeType_log) Columns() []string {
-	return []string{"id", "project_name", "tag_name", "created_at", "approved_at", "log_author", "log_action", "log_date", "log_comment"}
+	return []string{"id", "project_name", "tag_name", "created_at", "approved_at", "deleted_at", "log_author", "log_action", "log_date", "log_comment"}
 }
 
 func (v *pipelineTableTypeType_log) NewStruct() reform.Struct {
@@ -128,7 +128,7 @@ func (v *pipelineTableTypeType_log) PKColumnIndex() uint {
 }
 
 var PipelineTableLogRow = &pipelineTableTypeType_log{
-	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines_log", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAuthor", IsPK: false, IsUnique: false, HasIndex: false, Type: "*string", Column: "log_author", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAction", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_action", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogDate", IsPK: false, IsUnique: false, HasIndex: false, Type: "time.Time", Column: "log_date", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogComment", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_comment", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
+	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines_log", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "DeletedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "deleted_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAuthor", IsPK: false, IsUnique: false, HasIndex: false, Type: "*string", Column: "log_author", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAction", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_action", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogDate", IsPK: false, IsUnique: false, HasIndex: false, Type: "time.Time", Column: "log_date", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogComment", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_comment", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
 	z: new(PipelineLogRow).Values(),
 }
 
@@ -144,6 +144,8 @@ func (s pipelineTableTypeType) ColumnNameByFieldName(fieldName string) string {
 		return "created_at"
 	case "ApprovedAt":
 		return "approved_at"
+	case "DeletedAt":
+		return "deleted_at"
 	}
 	return ""
 }
@@ -160,6 +162,8 @@ func (s pipelineTableTypeType_log) ColumnNameByFieldName(fieldName string) strin
 		return "created_at"
 	case "ApprovedAt":
 		return "approved_at"
+	case "DeletedAt":
+		return "deleted_at"
 	case "LogAuthor":
 		return "log_author"
 	case "LogAction":
@@ -216,6 +220,8 @@ func (s *Pipeline) FieldPointerByName(fieldName string) interface{} {
 		return &s.CreatedAt
 	case "ApprovedAt":
 		return &s.ApprovedAt
+	case "DeletedAt":
+		return &s.DeletedAt
 	}
 
 	return nil
@@ -233,6 +239,8 @@ func (s *PipelineLogRow) FieldPointerByName(fieldName string) interface{} {
 		return &s.CreatedAt
 	case "ApprovedAt":
 		return &s.ApprovedAt
+	case "DeletedAt":
+		return &s.DeletedAt
 	case "LogAuthor":
 		return &s.LogAuthor
 	case "LogAction":
@@ -248,25 +256,27 @@ func (s *PipelineLogRow) FieldPointerByName(fieldName string) interface{} {
 
 // String returns a string representation of this struct or record.
 func (s Pipeline) String() string {
-	res := make([]string, 5)
+	res := make([]string, 6)
 	res[0] = "Id: " + reform.Inspect(s.Id, true)
 	res[1] = "ProjectName: " + reform.Inspect(s.ProjectName, true)
 	res[2] = "TagName: " + reform.Inspect(s.TagName, true)
 	res[3] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
 	res[4] = "ApprovedAt: " + reform.Inspect(s.ApprovedAt, true)
+	res[5] = "DeletedAt: " + reform.Inspect(s.DeletedAt, true)
 	return strings.Join(res, ", ")
 }
 func (s PipelineLogRow) String() string {
-	res := make([]string, 9)
+	res := make([]string, 10)
 	res[0] = "Id: " + reform.Inspect(s.Id, true)
 	res[1] = "ProjectName: " + reform.Inspect(s.ProjectName, true)
 	res[2] = "TagName: " + reform.Inspect(s.TagName, true)
 	res[3] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
 	res[4] = "ApprovedAt: " + reform.Inspect(s.ApprovedAt, true)
-	res[5] = "LogAuthor: " + reform.Inspect(s.LogAuthor, true)
-	res[6] = "LogAction: " + reform.Inspect(s.LogAction, true)
-	res[7] = "LogDate: " + reform.Inspect(s.LogDate, true)
-	res[8] = "LogComment: " + reform.Inspect(s.LogComment, true)
+	res[5] = "DeletedAt: " + reform.Inspect(s.DeletedAt, true)
+	res[6] = "LogAuthor: " + reform.Inspect(s.LogAuthor, true)
+	res[7] = "LogAction: " + reform.Inspect(s.LogAction, true)
+	res[8] = "LogDate: " + reform.Inspect(s.LogDate, true)
+	res[9] = "LogComment: " + reform.Inspect(s.LogComment, true)
 	return strings.Join(res, ", ")
 }
 
@@ -279,6 +289,7 @@ func (s *Pipeline) Values() []interface{} {
 		s.TagName,
 		s.CreatedAt,
 		s.ApprovedAt,
+		s.DeletedAt,
 	}
 }
 func (s *PipelineLogRow) Values() []interface{} {
@@ -299,6 +310,7 @@ func (s *Pipeline) Pointers() []interface{} {
 		&s.TagName,
 		&s.CreatedAt,
 		&s.ApprovedAt,
+		&s.DeletedAt,
 	}
 }
 func (s *PipelineLogRow) Pointers() []interface{} {

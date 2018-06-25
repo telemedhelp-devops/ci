@@ -55,7 +55,7 @@ func (v requiredApprovalTableTypeType) Name() string {
 
 // Columns returns a new slice of column names for that view or table in SQL database.
 func (v requiredApprovalTableTypeType) Columns() []string {
-	return []string{"id", "username", "project_name", "created_at"}
+	return []string{"id", "username", "project_name", "created_at", "approvement_group_id"}
 }
 
 // NewStruct makes a new struct for that view or table.
@@ -90,7 +90,7 @@ func (v requiredApprovalTableTypeType) StructInfo() reform.StructInfo {
 
 // RequiredApprovalTable represents required_approvals view or table in SQL database.
 var RequiredApprovalTable = &requiredApprovalTableTypeType{
-	s: reform.StructInfo{Type: "RequiredApproval", SQLSchema: "", SQLName: "required_approvals", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "Username", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "username", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
+	s: reform.StructInfo{Type: "RequiredApproval", SQLSchema: "", SQLName: "required_approvals", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "Username", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "username", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovementGroupId", IsPK: false, IsUnique: false, HasIndex: false, Type: "int", Column: "approvement_group_id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
 	z: new(RequiredApproval).Values(),
 }
 
@@ -108,7 +108,7 @@ func (v *requiredApprovalTableTypeType_log) Name() string {
 }
 
 func (v *requiredApprovalTableTypeType_log) Columns() []string {
-	return []string{"id", "username", "project_name", "created_at", "log_author", "log_action", "log_date", "log_comment"}
+	return []string{"id", "username", "project_name", "created_at", "approvement_group_id", "log_author", "log_action", "log_date", "log_comment"}
 }
 
 func (v *requiredApprovalTableTypeType_log) NewStruct() reform.Struct {
@@ -128,7 +128,7 @@ func (v *requiredApprovalTableTypeType_log) PKColumnIndex() uint {
 }
 
 var RequiredApprovalTableLogRow = &requiredApprovalTableTypeType_log{
-	s: reform.StructInfo{Type: "RequiredApproval", SQLSchema: "", SQLName: "required_approvals_log", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "Username", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "username", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAuthor", IsPK: false, IsUnique: false, HasIndex: false, Type: "*string", Column: "log_author", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAction", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_action", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogDate", IsPK: false, IsUnique: false, HasIndex: false, Type: "time.Time", Column: "log_date", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogComment", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_comment", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
+	s: reform.StructInfo{Type: "RequiredApproval", SQLSchema: "", SQLName: "required_approvals_log", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "Username", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "username", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovementGroupId", IsPK: false, IsUnique: false, HasIndex: false, Type: "int", Column: "approvement_group_id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAuthor", IsPK: false, IsUnique: false, HasIndex: false, Type: "*string", Column: "log_author", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAction", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_action", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogDate", IsPK: false, IsUnique: false, HasIndex: false, Type: "time.Time", Column: "log_date", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogComment", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_comment", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
 	z: new(RequiredApprovalLogRow).Values(),
 }
 
@@ -142,6 +142,8 @@ func (s requiredApprovalTableTypeType) ColumnNameByFieldName(fieldName string) s
 		return "project_name"
 	case "CreatedAt":
 		return "created_at"
+	case "ApprovementGroupId":
+		return "approvement_group_id"
 	}
 	return ""
 }
@@ -156,6 +158,8 @@ func (s requiredApprovalTableTypeType_log) ColumnNameByFieldName(fieldName strin
 		return "project_name"
 	case "CreatedAt":
 		return "created_at"
+	case "ApprovementGroupId":
+		return "approvement_group_id"
 	case "LogAuthor":
 		return "log_author"
 	case "LogAction":
@@ -210,6 +214,8 @@ func (s *RequiredApproval) FieldPointerByName(fieldName string) interface{} {
 		return &s.ProjectName
 	case "CreatedAt":
 		return &s.CreatedAt
+	case "ApprovementGroupId":
+		return &s.ApprovementGroupId
 	}
 
 	return nil
@@ -225,6 +231,8 @@ func (s *RequiredApprovalLogRow) FieldPointerByName(fieldName string) interface{
 		return &s.ProjectName
 	case "CreatedAt":
 		return &s.CreatedAt
+	case "ApprovementGroupId":
+		return &s.ApprovementGroupId
 	case "LogAuthor":
 		return &s.LogAuthor
 	case "LogAction":
@@ -240,23 +248,25 @@ func (s *RequiredApprovalLogRow) FieldPointerByName(fieldName string) interface{
 
 // String returns a string representation of this struct or record.
 func (s RequiredApproval) String() string {
-	res := make([]string, 4)
+	res := make([]string, 5)
 	res[0] = "Id: " + reform.Inspect(s.Id, true)
 	res[1] = "Username: " + reform.Inspect(s.Username, true)
 	res[2] = "ProjectName: " + reform.Inspect(s.ProjectName, true)
 	res[3] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
+	res[4] = "ApprovementGroupId: " + reform.Inspect(s.ApprovementGroupId, true)
 	return strings.Join(res, ", ")
 }
 func (s RequiredApprovalLogRow) String() string {
-	res := make([]string, 8)
+	res := make([]string, 9)
 	res[0] = "Id: " + reform.Inspect(s.Id, true)
 	res[1] = "Username: " + reform.Inspect(s.Username, true)
 	res[2] = "ProjectName: " + reform.Inspect(s.ProjectName, true)
 	res[3] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
-	res[4] = "LogAuthor: " + reform.Inspect(s.LogAuthor, true)
-	res[5] = "LogAction: " + reform.Inspect(s.LogAction, true)
-	res[6] = "LogDate: " + reform.Inspect(s.LogDate, true)
-	res[7] = "LogComment: " + reform.Inspect(s.LogComment, true)
+	res[4] = "ApprovementGroupId: " + reform.Inspect(s.ApprovementGroupId, true)
+	res[5] = "LogAuthor: " + reform.Inspect(s.LogAuthor, true)
+	res[6] = "LogAction: " + reform.Inspect(s.LogAction, true)
+	res[7] = "LogDate: " + reform.Inspect(s.LogDate, true)
+	res[8] = "LogComment: " + reform.Inspect(s.LogComment, true)
 	return strings.Join(res, ", ")
 }
 
@@ -268,6 +278,7 @@ func (s *RequiredApproval) Values() []interface{} {
 		s.Username,
 		s.ProjectName,
 		s.CreatedAt,
+		s.ApprovementGroupId,
 	}
 }
 func (s *RequiredApprovalLogRow) Values() []interface{} {
@@ -287,6 +298,7 @@ func (s *RequiredApproval) Pointers() []interface{} {
 		&s.Username,
 		&s.ProjectName,
 		&s.CreatedAt,
+		&s.ApprovementGroupId,
 	}
 }
 func (s *RequiredApprovalLogRow) Pointers() []interface{} {

@@ -8,10 +8,11 @@ import (
 
 //reform:required_approvals
 type RequiredApproval struct {
-	Id          int          `reform:"id,pk"`
-	Username    string       `reform:"username" sql_size:"255"`
-	ProjectName string       `reform:"project_name" sql_size:"255"`
-	CreatedAt   *extime.Time `reform:"created_at"`
+	Id                 int          `reform:"id,pk"`
+	Username           string       `reform:"username" sql_size:"255"`
+	ProjectName        string       `reform:"project_name" sql_size:"255"`
+	CreatedAt          *extime.Time `reform:"created_at"`
+	ApprovementGroupId int          `reform:"approvement_group_id"`
 }
 
 type RequiredApprovals []RequiredApproval
