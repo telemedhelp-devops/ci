@@ -4,16 +4,20 @@ package models
 
 import (
 	"github.com/xaionaro-go/extime"
+	"golang.org/x/crypto/bcrypt"
 )
 
 //reform:pipelines
 type Pipeline struct {
-	Id          int          `reform:"id,pk"`
-	ProjectName string       `reform:"project_name" sql_size:"255"`
-	TagName     string       `reform:"tag_name" sql_size:"255"`
-	CreatedAt   *extime.Time `reform:"created_at"`
-	ApprovedAt  *extime.Time `reform:"approved_at"`
-	DeletedAt   *extime.Time `reform:"deleted_at"`
+	Id               int          `reform:"id,pk"`
+	GitlabPipelineId int          `reform:"gitlab_pipeline_id"`
+	GitlabNamespace  string       `reform:"gitlab_namespace"`
+	TokenHash        []byte       `reform:"token_hash"`
+	ProjectName      string       `reform:"project_name" sql_size:"255"`
+	TagName          string       `reform:"tag_name" sql_size:"255"`
+	CreatedAt        *extime.Time `reform:"created_at"`
+	ApprovedAt       *extime.Time `reform:"approved_at"`
+	DeletedAt        *extime.Time `reform:"deleted_at"`
 
 	Approvals         Approvals         `reform:"-"`
 	RequiredApprovals RequiredApprovals `reform:"-"`
@@ -68,5 +72,30 @@ func (pipelines Pipelines) PrepareRequiredApprovals() Pipelines {
 		}
 	}
 
+	return pipelines
+}
+
+func (pipeline *Pipeline) SetToken(token string) *Pipeline {
+	var err error
+	pipeline.TokenHash, err = bcrypt.GenerateFromPassword([]byte(token), bcrypt.DefaultCost)
+	if err != nil {
+		panic(err)
+	}
+	return pipeline
+}
+
+func (pipeline *Pipeline) CompareToken(token string) bool {
+	return bcrypt.CompareHashAndPassword(pipeline.TokenHash, []byte(token)) == nil
+}
+
+func (pipeline *Pipeline) HideTokenHash() *Pipeline {
+	pipeline.TokenHash = []byte("<hidden>")
+	return pipeline
+}
+
+func (pipelines Pipelines) HideTokenHash() Pipelines {
+	for idx := range pipelines {
+		pipelines[idx].HideTokenHash()
+	}
 	return pipelines
 }

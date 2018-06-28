@@ -23,11 +23,13 @@ type GitLabCfg struct {
 }
 
 type Config struct {
-	IsDev   bool      `yaml:"development_mode"`
-	BaseURL string    `yaml:"base_url"`
-	Secret  string    `yaml:"secret"`
-	GitLab  GitLabCfg `yaml:"gitlab"`
-	Db      DbCfg     `yaml:"db"`
+	IsDev           bool      `yaml:"development_mode"`
+	BaseURL         string    `yaml:"base_url"`
+	Secret          string    `yaml:"secret"`
+	LogReaderIPAddr string    `yaml:"log_reader_ip_address"`
+	LogWriterIPAddr string    `yaml:"log_writer_ip_address"`
+	GitLab          GitLabCfg `yaml:"gitlab"`
+	Db              DbCfg     `yaml:"db"`
 }
 
 var cfg Config

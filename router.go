@@ -39,6 +39,8 @@ func setupJSONRouter(r *gin.Engine) {
 	// My methods
 	r.GET("/ping.json", m.Ping)
 	r.GET("/simpleApi/wantToDeploy/:project/:tag", m.WantToDeploy)
+	r.GET("/websocket/writeLog/:gitlab_pipeline_id", m.WSWriteLog)
+	r.GET("/websocket/log/:gitlab_pipeline_id", m.WSGetLog)
 	authed.GET("/whoami.json", m.Whoami)
 	authed.GET("/pipelines.json", m.Pipelines)
 	authed.DELETE("/pipelines.json", m.DeletePipeline)

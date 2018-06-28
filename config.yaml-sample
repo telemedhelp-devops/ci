@@ -1,6 +1,8 @@
 development_mode: false
 base_url: https://ci.myorganization.com
 secret: someSecretHere
+log_reader_ip_address: 10.1.2.3
+log_writer_ip_address: 10.1.2.3
 gitlab:
   url: https://gitlab.myorganization.com
   key: GitLab-key
