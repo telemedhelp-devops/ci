@@ -28,6 +28,8 @@ type Config struct {
 	Secret          string    `yaml:"secret"`
 	LogReaderIPAddr string    `yaml:"log_reader_ip_address"`
 	LogWriterIPAddr string    `yaml:"log_writer_ip_address"`
+	SMSGWLogin      string    `yaml:"sms_gw_login"`
+	SMSGWPassword   string    `yaml:"sms_gw_password"`
 	GitLab          GitLabCfg `yaml:"gitlab"`
 	Db              DbCfg     `yaml:"db"`
 }

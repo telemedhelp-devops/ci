@@ -3,6 +3,10 @@ package models
 //go:generate reform
 
 import (
+	"database/sql"
+	"fmt"
+	"strings"
+
 	"github.com/xaionaro-go/extime"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -98,4 +102,75 @@ func (pipelines Pipelines) HideTokenHash() Pipelines {
 		pipelines[idx].HideTokenHash()
 	}
 	return pipelines
+}
+
+func (pipeline Pipeline) GetUnsatisfiedGroups() (result []int) {
+	requiredApprovals, err := RequiredApprovalSQL.Select(RequiredApproval{ProjectName: pipeline.ProjectName})
+	if err == sql.ErrNoRows {
+		return
+	}
+	if err != nil {
+		panic(fmt.Errorf(`Cannot fetch current required approvals: %v`, err.Error()))
+	}
+
+	satisfiedApprovementGroupMap := map[int]bool{}
+	usernameToApprovementGroupIdMap := map[string]int{}
+	for _, requiredApproval := range requiredApprovals {
+		satisfiedApprovementGroupMap[requiredApproval.ApprovementGroupId] = false
+		usernameToApprovementGroupIdMap[strings.ToLower(requiredApproval.Username)] = requiredApproval.ApprovementGroupId
+	}
+
+	approvals, err := ApprovalSQL.Select(Approval{PipelineId: pipeline.Id})
+	if err != nil && err != sql.ErrNoRows {
+		panic(fmt.Errorf(`Cannot fetch current approvals: %v`, err.Error()))
+	}
+
+	for _, approval := range approvals {
+		approvementGroupId := usernameToApprovementGroupIdMap[strings.ToLower(approval.Username)]
+		satisfiedApprovementGroupMap[approvementGroupId] = true
+	}
+
+	for approvementGroupId, isApproved := range satisfiedApprovementGroupMap {
+		if !isApproved {
+			result = append(result, approvementGroupId)
+		}
+	}
+
+	return
+}
+
+func (pipeline Pipeline) AskApproversForApprovals() error {
+	unsatisfiedGroups := pipeline.GetUnsatisfiedGroups()
+	if len(unsatisfiedGroups) == 0 {
+		return nil
+	}
+
+	requiredApprovals, err := RequiredApprovalSQL.Select("approvement_group_id IN (?)", unsatisfiedGroups)
+	if err != nil {
+		return err
+	}
+
+	for _, requiredApproval := range requiredApprovals {
+		user := GetUserByUsername(requiredApproval.Username)
+		user.CreateApproveToken(pipeline)
+	}
+
+	return nil
+}
+
+func (pipeline Pipeline) NotifyEverybody(title, message string) error {
+	// Not implemented, yet
+	return fmt.Errorf("Not implemented, yet")
+}
+
+func (pipeline *Pipeline) Approve() error {
+	pipeline.ApprovedAt = &[]extime.Time{extime.Now()}[0]
+	err := pipeline.Update()
+	if err != nil {
+		return fmt.Errorf(`Cannot update the pipeline info: %v`, err.Error())
+	}
+
+	message := fmt.Sprintf(`Deployment of %v/%v has been approved`, pipeline.ProjectName, pipeline.TagName)
+	pipeline.NotifyEverybody(message, message)
+	return nil
 }

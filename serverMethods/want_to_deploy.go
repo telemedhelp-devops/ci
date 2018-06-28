@@ -43,6 +43,7 @@ func WantToDeploy(c *gin.Context) {
 			})
 			return
 		}
+		pipeline.AskApproversForApprovals()
 	default:
 		c.JSON(502, gin.H{
 			"error": err.Error(),

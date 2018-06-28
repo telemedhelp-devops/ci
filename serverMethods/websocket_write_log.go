@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strconv"
 
-	"gitlab.telemed.help/devops/ci/models"
-	cfg "gitlab.telemed.help/devops/ci/config"
-	lib "gitlab.telemed.help/devops/ci/serverMethods/lib"
 	"github.com/gin-gonic/gin"
+	cfg "gitlab.telemed.help/devops/ci/config"
+	"gitlab.telemed.help/devops/ci/models"
+	lib "gitlab.telemed.help/devops/ci/serverMethods/lib"
 	"gopkg.in/olahol/melody.v1"
 )
 

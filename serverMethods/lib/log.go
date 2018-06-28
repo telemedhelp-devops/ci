@@ -18,9 +18,9 @@ type Log interface {
 }
 
 type log struct {
-	mutex *sync.Mutex
+	mutex    *sync.Mutex
 	sessions []*melody.Session
-	History []string
+	History  []string
 }
 
 func newLog() *log {
@@ -111,7 +111,7 @@ type logs struct {
 }
 
 func NewLogs() *logs {
-	return &logs {
+	return &logs{
 		logs:  map[int]Log{},
 		mutex: &sync.Mutex{},
 	}

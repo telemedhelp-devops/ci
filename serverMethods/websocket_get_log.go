@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	cfg "gitlab.telemed.help/devops/ci/config"
 	"gitlab.telemed.help/devops/ci/models"
-	"github.com/gin-gonic/gin"
 	"gopkg.in/olahol/melody.v1"
 )
 

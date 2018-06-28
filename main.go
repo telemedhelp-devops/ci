@@ -6,6 +6,7 @@ import (
 	db "gitlab.telemed.help/devops/ci/db"
 	"gitlab.telemed.help/devops/ci/gitlabAuth"
 	models "gitlab.telemed.help/devops/ci/models"
+	"gitlab.telemed.help/devops/ci/sms"
 )
 
 func checkError(err error) {
@@ -30,6 +31,17 @@ func main() {
 
 	models.RequiredApprovalSQL.SetDefaultDB(db.GetDB())
 	_, err = models.RequiredApprovalSQL.Table().CreateTableIfNotExists(db.GetDB())
+	checkError(err)
+
+	models.ApproveTokenSQL.SetDefaultDB(db.GetDB())
+	_, err = models.ApproveTokenSQL.Table().CreateTableIfNotExists(db.GetDB())
+	checkError(err)
+
+	models.UserProfileSQL.SetDefaultDB(db.GetDB())
+	_, err = models.UserProfileSQL.Table().CreateTableIfNotExists(db.GetDB())
+	checkError(err)
+
+	err = sms.InitGoSMSC(cfg.Get().SMSGWLogin, cfg.Get().SMSGWPassword)
 	checkError(err)
 
 	gitlabAuth.Init()
