@@ -27,6 +27,7 @@ func SetPipelineSuccessStatus(c *gin.Context, v bool) {
 		return
 	}
 
+	pipeline.DeletedAt = &[]extime.Time{extime.Now()}[0]
 	pipeline.Success = &v
 	err = pipeline.Update()
 	if err != nil {
