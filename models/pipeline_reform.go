@@ -55,7 +55,7 @@ func (v pipelineTableTypeType) Name() string {
 
 // Columns returns a new slice of column names for that view or table in SQL database.
 func (v pipelineTableTypeType) Columns() []string {
-	return []string{"id", "gitlab_pipeline_id", "gitlab_namespace", "token_hash", "project_name", "tag_name", "created_at", "approved_at", "deleted_at"}
+	return []string{"id", "gitlab_pipeline_id", "gitlab_namespace", "token_hash", "project_name", "tag_name", "success", "created_at", "approved_at", "deleted_at"}
 }
 
 // NewStruct makes a new struct for that view or table.
@@ -90,7 +90,7 @@ func (v pipelineTableTypeType) StructInfo() reform.StructInfo {
 
 // PipelineTable represents pipelines view or table in SQL database.
 var PipelineTable = &pipelineTableTypeType{
-	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabPipelineId", IsPK: false, IsUnique: false, HasIndex: false, Type: "int", Column: "gitlab_pipeline_id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabNamespace", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "gitlab_namespace", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "TokenHash", IsPK: false, IsUnique: false, HasIndex: false, Type: "[]uint8", Column: "token_hash", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "DeletedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "deleted_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
+	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabPipelineId", IsPK: false, IsUnique: false, HasIndex: false, Type: "int", Column: "gitlab_pipeline_id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabNamespace", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "gitlab_namespace", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "TokenHash", IsPK: false, IsUnique: false, HasIndex: false, Type: "[]uint8", Column: "token_hash", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "Success", IsPK: false, IsUnique: false, HasIndex: false, Type: "*bool", Column: "success", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "DeletedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "deleted_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
 	z: new(Pipeline).Values(),
 }
 
@@ -108,7 +108,7 @@ func (v *pipelineTableTypeType_log) Name() string {
 }
 
 func (v *pipelineTableTypeType_log) Columns() []string {
-	return []string{"id", "gitlab_pipeline_id", "gitlab_namespace", "token_hash", "project_name", "tag_name", "created_at", "approved_at", "deleted_at", "log_author", "log_action", "log_date", "log_comment"}
+	return []string{"id", "gitlab_pipeline_id", "gitlab_namespace", "token_hash", "project_name", "tag_name", "success", "created_at", "approved_at", "deleted_at", "log_author", "log_action", "log_date", "log_comment"}
 }
 
 func (v *pipelineTableTypeType_log) NewStruct() reform.Struct {
@@ -128,7 +128,7 @@ func (v *pipelineTableTypeType_log) PKColumnIndex() uint {
 }
 
 var PipelineTableLogRow = &pipelineTableTypeType_log{
-	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines_log", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabPipelineId", IsPK: false, IsUnique: false, HasIndex: false, Type: "int", Column: "gitlab_pipeline_id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabNamespace", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "gitlab_namespace", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "TokenHash", IsPK: false, IsUnique: false, HasIndex: false, Type: "[]uint8", Column: "token_hash", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "DeletedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "deleted_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAuthor", IsPK: false, IsUnique: false, HasIndex: false, Type: "*string", Column: "log_author", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAction", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_action", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogDate", IsPK: false, IsUnique: false, HasIndex: false, Type: "time.Time", Column: "log_date", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogComment", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_comment", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
+	s: reform.StructInfo{Type: "Pipeline", SQLSchema: "", SQLName: "pipelines_log", Fields: []reform.FieldInfo{{Name: "Id", IsPK: true, IsUnique: false, HasIndex: false, Type: "int", Column: "id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabPipelineId", IsPK: false, IsUnique: false, HasIndex: false, Type: "int", Column: "gitlab_pipeline_id", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "GitlabNamespace", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "gitlab_namespace", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "TokenHash", IsPK: false, IsUnique: false, HasIndex: false, Type: "[]uint8", Column: "token_hash", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ProjectName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "project_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "TagName", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "tag_name", FieldsPath: []reform.FieldInfo{}, SQLSize: 255, Embedded: "", StructFile: ""}, {Name: "Success", IsPK: false, IsUnique: false, HasIndex: false, Type: "*bool", Column: "success", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "CreatedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "created_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "ApprovedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "approved_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "DeletedAt", IsPK: false, IsUnique: false, HasIndex: false, Type: "*extime.Time", Column: "deleted_at", FieldsPath: []reform.FieldInfo{}, SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAuthor", IsPK: false, IsUnique: false, HasIndex: false, Type: "*string", Column: "log_author", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogAction", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_action", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogDate", IsPK: false, IsUnique: false, HasIndex: false, Type: "time.Time", Column: "log_date", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}, {Name: "LogComment", IsPK: false, IsUnique: false, HasIndex: false, Type: "string", Column: "log_comment", FieldsPath: []reform.FieldInfo(nil), SQLSize: 0, Embedded: "", StructFile: ""}}, PKFieldIndex: 0, ImitateGorm: false, SkipMethodOrder: false},
 	z: new(PipelineLogRow).Values(),
 }
 
@@ -146,6 +146,8 @@ func (s pipelineTableTypeType) ColumnNameByFieldName(fieldName string) string {
 		return "project_name"
 	case "TagName":
 		return "tag_name"
+	case "Success":
+		return "success"
 	case "CreatedAt":
 		return "created_at"
 	case "ApprovedAt":
@@ -170,6 +172,8 @@ func (s pipelineTableTypeType_log) ColumnNameByFieldName(fieldName string) strin
 		return "project_name"
 	case "TagName":
 		return "tag_name"
+	case "Success":
+		return "success"
 	case "CreatedAt":
 		return "created_at"
 	case "ApprovedAt":
@@ -234,6 +238,8 @@ func (s *Pipeline) FieldPointerByName(fieldName string) interface{} {
 		return &s.ProjectName
 	case "TagName":
 		return &s.TagName
+	case "Success":
+		return &s.Success
 	case "CreatedAt":
 		return &s.CreatedAt
 	case "ApprovedAt":
@@ -259,6 +265,8 @@ func (s *PipelineLogRow) FieldPointerByName(fieldName string) interface{} {
 		return &s.ProjectName
 	case "TagName":
 		return &s.TagName
+	case "Success":
+		return &s.Success
 	case "CreatedAt":
 		return &s.CreatedAt
 	case "ApprovedAt":
@@ -280,33 +288,35 @@ func (s *PipelineLogRow) FieldPointerByName(fieldName string) interface{} {
 
 // String returns a string representation of this struct or record.
 func (s Pipeline) String() string {
-	res := make([]string, 9)
+	res := make([]string, 10)
 	res[0] = "Id: " + reform.Inspect(s.Id, true)
 	res[1] = "GitlabPipelineId: " + reform.Inspect(s.GitlabPipelineId, true)
 	res[2] = "GitlabNamespace: " + reform.Inspect(s.GitlabNamespace, true)
 	res[3] = "TokenHash: " + reform.Inspect(s.TokenHash, true)
 	res[4] = "ProjectName: " + reform.Inspect(s.ProjectName, true)
 	res[5] = "TagName: " + reform.Inspect(s.TagName, true)
-	res[6] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
-	res[7] = "ApprovedAt: " + reform.Inspect(s.ApprovedAt, true)
-	res[8] = "DeletedAt: " + reform.Inspect(s.DeletedAt, true)
+	res[6] = "Success: " + reform.Inspect(s.Success, true)
+	res[7] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
+	res[8] = "ApprovedAt: " + reform.Inspect(s.ApprovedAt, true)
+	res[9] = "DeletedAt: " + reform.Inspect(s.DeletedAt, true)
 	return strings.Join(res, ", ")
 }
 func (s PipelineLogRow) String() string {
-	res := make([]string, 13)
+	res := make([]string, 14)
 	res[0] = "Id: " + reform.Inspect(s.Id, true)
 	res[1] = "GitlabPipelineId: " + reform.Inspect(s.GitlabPipelineId, true)
 	res[2] = "GitlabNamespace: " + reform.Inspect(s.GitlabNamespace, true)
 	res[3] = "TokenHash: " + reform.Inspect(s.TokenHash, true)
 	res[4] = "ProjectName: " + reform.Inspect(s.ProjectName, true)
 	res[5] = "TagName: " + reform.Inspect(s.TagName, true)
-	res[6] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
-	res[7] = "ApprovedAt: " + reform.Inspect(s.ApprovedAt, true)
-	res[8] = "DeletedAt: " + reform.Inspect(s.DeletedAt, true)
-	res[9] = "LogAuthor: " + reform.Inspect(s.LogAuthor, true)
-	res[10] = "LogAction: " + reform.Inspect(s.LogAction, true)
-	res[11] = "LogDate: " + reform.Inspect(s.LogDate, true)
-	res[12] = "LogComment: " + reform.Inspect(s.LogComment, true)
+	res[6] = "Success: " + reform.Inspect(s.Success, true)
+	res[7] = "CreatedAt: " + reform.Inspect(s.CreatedAt, true)
+	res[8] = "ApprovedAt: " + reform.Inspect(s.ApprovedAt, true)
+	res[9] = "DeletedAt: " + reform.Inspect(s.DeletedAt, true)
+	res[10] = "LogAuthor: " + reform.Inspect(s.LogAuthor, true)
+	res[11] = "LogAction: " + reform.Inspect(s.LogAction, true)
+	res[12] = "LogDate: " + reform.Inspect(s.LogDate, true)
+	res[13] = "LogComment: " + reform.Inspect(s.LogComment, true)
 	return strings.Join(res, ", ")
 }
 
@@ -320,6 +330,7 @@ func (s *Pipeline) Values() []interface{} {
 		s.TokenHash,
 		s.ProjectName,
 		s.TagName,
+		s.Success,
 		s.CreatedAt,
 		s.ApprovedAt,
 		s.DeletedAt,
@@ -344,6 +355,7 @@ func (s *Pipeline) Pointers() []interface{} {
 		&s.TokenHash,
 		&s.ProjectName,
 		&s.TagName,
+		&s.Success,
 		&s.CreatedAt,
 		&s.ApprovedAt,
 		&s.DeletedAt,

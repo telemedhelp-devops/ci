@@ -19,6 +19,7 @@ type Pipeline struct {
 	TokenHash        []byte       `reform:"token_hash"`
 	ProjectName      string       `reform:"project_name" sql_size:"255"`
 	TagName          string       `reform:"tag_name" sql_size:"255"`
+	Success          *bool        `reform:"success"`
 	CreatedAt        *extime.Time `reform:"created_at"`
 	ApprovedAt       *extime.Time `reform:"approved_at"`
 	DeletedAt        *extime.Time `reform:"deleted_at"`
