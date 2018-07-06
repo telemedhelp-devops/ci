@@ -2,11 +2,16 @@ package serverMethodsLib
 
 import (
 	"database/sql"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xaionaro-go/extime"
+	logger "github.com/xaionaro-go/log"
+	cfg "gitlab.telemed.help/devops/ci/config"
+	"gitlab.telemed.help/devops/ci/gitlab"
 	"gitlab.telemed.help/devops/ci/models"
+	"gitlab.telemed.help/devops/ci/smtp"
 )
 
 func SetPipelineSuccessStatus(c *gin.Context, v bool) {
@@ -36,6 +41,24 @@ func SetPipelineSuccessStatus(c *gin.Context, v bool) {
 		})
 		return
 	}
+
+	tag, err := gitlab.GetTag(pipeline.GitlabNamespace+"/"+pipeline.ProjectName, pipeline.TagName)
+	if err != nil {
+		logger.Errorf("Cannot find the tag on the GitLab: %v", err)
+	}
+
+	tagDescription := ""
+	if tag.Release == nil {
+		logger.Errorf("tag.Release == nil")
+	} else {
+		tagDescription = tag.Release.Description
+	}
+
+	notificationEmail := cfg.Get().NotificationEmail
+
+	title := fmt.Sprintf(`"%v/%v" has been deployed`, pipeline.ProjectName, pipeline.TagName)
+	message := title + ".\n\n" + tagDescription
+	smtp.Send(notificationEmail, title, message)
 
 	c.JSON(200, gin.H{
 		"status": "OK",

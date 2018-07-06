@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sethvargo/go-password/password"
 	"github.com/xaionaro-go/extime"
+	"github.com/xaionaro-go/log"
 	"gitlab.telemed.help/devops/ci/models"
 )
 
@@ -43,7 +44,25 @@ func WantToDeploy(c *gin.Context) {
 			})
 			return
 		}
-		pipeline.AskApproversForApprovals()
+		err = pipeline.AskAuthorForDescription()
+		if err != nil {
+			log.Errorf("Cannot ask the author for a description: %v", err.Error())
+		}
+		go func() {
+			err := pipeline.WaitForDescription()
+			if err != nil {
+				log.Errorf("Cannot wait for a description: %v", err.Error())
+			}
+			err = pipeline.AskApproversForApprovals()
+			if err != nil {
+				log.Errorf("Cannot ask approvers for approvals: %v", err.Error())
+				pipeline.DeletedAt = &[]extime.Time{extime.Now()}[0]
+				err := pipeline.Update()
+				if err != nil {
+					log.Errorf("Cannot delete a pipeline: %v", err.Error())
+				}
+			}
+		}()
 	default:
 		c.JSON(502, gin.H{
 			"error": err.Error(),

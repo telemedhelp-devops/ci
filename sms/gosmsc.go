@@ -11,7 +11,7 @@ type goSMSC struct {
 func InitGoSMSC(login, password string) (err error) {
 	var goSMSC goSMSC
 	goSMSC.impl, err = gosmsc.NewSenderFetcherImpl(&gosmsc.SmscClientOptions{
-		User: login,
+		User:     login,
 		Password: password,
 	})
 	if err != nil {

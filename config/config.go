@@ -20,18 +20,32 @@ type GitLabCfg struct {
 	URL    string `yaml:"url"`
 	Key    string
 	Secret string
+	Token  string
+}
+
+type SmtpCfg struct {
+	Host        string `yaml:"host"`
+	FromAddress string `yaml:"from_address"`
+}
+
+type JiraCfg struct {
+	URL          string `yaml:"url"`
+	IssuesRegexp string `yaml:"issues_regexp"`
 }
 
 type Config struct {
-	IsDev           bool      `yaml:"development_mode"`
-	BaseURL         string    `yaml:"base_url"`
-	Secret          string    `yaml:"secret"`
-	LogReaderIPAddr string    `yaml:"log_reader_ip_address"`
-	LogWriterIPAddr string    `yaml:"log_writer_ip_address"`
-	SMSGWLogin      string    `yaml:"sms_gw_login"`
-	SMSGWPassword   string    `yaml:"sms_gw_password"`
-	GitLab          GitLabCfg `yaml:"gitlab"`
-	Db              DbCfg     `yaml:"db"`
+	IsDev             bool      `yaml:"development_mode"`
+	BaseURL           string    `yaml:"base_url"`
+	Secret            string    `yaml:"secret"`
+	LogReaderIPAddr   string    `yaml:"log_reader_ip_address"`
+	LogWriterIPAddr   string    `yaml:"log_writer_ip_address"`
+	SMSGWLogin        string    `yaml:"sms_gw_login"`
+	SMSGWPassword     string    `yaml:"sms_gw_password"`
+	GitLab            GitLabCfg `yaml:"gitlab"`
+	Db                DbCfg     `yaml:"db"`
+	Smtp              SmtpCfg   `yaml:"smtp"`
+	Jira              JiraCfg   `yaml:"jira"`
+	NotificationEmail string    `yaml:"notification_email"`
 }
 
 var cfg Config
@@ -46,8 +60,8 @@ func checkErr(err error) {
 	panic(err)
 }
 
-func Reload() {
-	configData, err := ioutil.ReadFile("config.yaml")
+func Reload(path string) {
+	configData, err := ioutil.ReadFile(path)
 	checkErr(err)
 
 	err = yaml.Unmarshal([]byte(configData), &cfg)

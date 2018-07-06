@@ -43,6 +43,7 @@ func setupJSONRouter(r *gin.Engine) {
 	r.GET("/simpleApi/approveUsingToken/:token", m.ApproveUsingToken)
 	r.GET("/simpleApi/setSuccess/:gitlab_pipeline_id", m.SetSuccess)
 	r.GET("/simpleApi/setFailure/:gitlab_pipeline_id", m.SetFailure)
+	r.GET("/simpleApi/getStatus/:gitlab_pipeline_id", m.GetStatus)
 	r.GET("/websocket/writeLog/:gitlab_pipeline_id", m.WSWriteLog)
 	r.GET("/websocket/log/:gitlab_pipeline_id", m.WSGetLog)
 	authed.GET("/whoami.json", m.Whoami)

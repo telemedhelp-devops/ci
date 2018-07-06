@@ -18,7 +18,7 @@ func checkError(err error) {
 func main() {
 	var err error
 
-	cfg.Reload()
+	cfg.Reload("config.yaml")
 	db.Init()
 
 	models.PipelineSQL.SetDefaultDB(db.GetDB())

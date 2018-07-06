@@ -5,10 +5,17 @@ log_reader_ip_address: 10.1.2.3
 log_writer_ip_address: 10.1.2.3
 sms_gw_login: some_login_here
 sms_gw_password: some_PaSsWoRd_here
+notification_email: developers@myorganization.com
+jira:
+  url: https://myorganization.atlassian.net
+  issues_regexp: (DEVOPS|PROJ)-[0-9]+
 gitlab:
   url: https://gitlab.myorganization.com
+  # application key and secret for Auth
   key: GitLab-key
   secret: GitLab-secret
+  # a private token (usually an impersonation token) to get information about tags and users
+  token: GitLab-private-token-here
 db:
   driver: mysql
   protocol: tcp
@@ -17,3 +24,6 @@ db:
   db: ci
   user: ci
   password: somePasswordHere
+smtp:
+  host: localhost
+  from_address: noreply@ci.myorganization.com

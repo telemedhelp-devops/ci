@@ -6,8 +6,14 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
+	"github.com/xaionaro-go/errors"
 	"github.com/xaionaro-go/extime"
+	"github.com/xaionaro-go/log"
+	cfg "gitlab.telemed.help/devops/ci/config"
+	"gitlab.telemed.help/devops/ci/gitlab"
+	"gitlab.telemed.help/devops/ci/smtp"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -140,20 +146,76 @@ func (pipeline Pipeline) GetUnsatisfiedGroups() (result []int) {
 	return
 }
 
+func (pipeline Pipeline) GetCommiterEmail() (string, error) {
+	tag, err := gitlab.GetTag(pipeline.GitlabNamespace+"/"+pipeline.ProjectName, pipeline.TagName)
+	if err != nil {
+		return "", errors.CannotGetInfo.New(err, fmt.Sprintf("Cannot get tag description"), pipeline)
+	}
+
+	if tag.Commit == nil {
+		return "", errors.OutOfRange.New(nil, "tag.Commit == nil", pipeline)
+	}
+
+	return tag.Commit.CommitterEmail, nil
+}
+
+func (pipeline Pipeline) AskAuthorForDescription() error {
+	title := fmt.Sprintf("Please provide the release description for %v/%v",
+		pipeline.ProjectName,
+		pipeline.TagName,
+	)
+	message := title + ".\n\n" + fmt.Sprintf("URL: %v/%v/%v/tags/%v/release/edit", cfg.Get().GitLab.URL, pipeline.GitlabNamespace, pipeline.ProjectName, pipeline.TagName)
+
+	email, err := pipeline.GetCommiterEmail()
+	if err != nil {
+		return err
+	}
+
+	return smtp.Send(email, title, message)
+}
+
+func (pipeline Pipeline) WaitForDescription() error {
+	for {
+		time.Sleep(time.Second * 5)
+
+		tag, err := gitlab.GetTag(pipeline.GitlabNamespace+"/"+pipeline.ProjectName, pipeline.TagName)
+		if err != nil {
+			return errors.CannotGetInfo.New(err, fmt.Sprintf("Cannot get tag description"), pipeline)
+		}
+
+		if tag.Release != nil {
+			if tag.Release.Description != "" {
+				return nil
+			}
+		}
+	}
+}
+
 func (pipeline Pipeline) AskApproversForApprovals() error {
 	unsatisfiedGroups := pipeline.GetUnsatisfiedGroups()
 	if len(unsatisfiedGroups) == 0 {
 		return nil
 	}
 
-	requiredApprovals, err := RequiredApprovalSQL.Select("approvement_group_id IN (?)", unsatisfiedGroups)
+	requiredApprovals, err := RequiredApprovalSQL.Where(RequiredApproval{ProjectName: pipeline.ProjectName}).Select("approvement_group_id IN (?)", unsatisfiedGroups)
 	if err != nil {
 		return err
 	}
 
+	tag, err := gitlab.GetTag(pipeline.GitlabNamespace+"/"+pipeline.ProjectName, pipeline.TagName)
+	if err != nil {
+		return errors.CannotGetInfo.New(err, fmt.Sprintf("Cannot get tag description"), pipeline)
+	}
+
+	tagDescription := ""
+	if tag.Release != nil {
+		tagDescription = tag.Release.Description
+		log.Errorf("Cannot get the release description")
+	}
+
 	for _, requiredApproval := range requiredApprovals {
 		user := GetUserByUsername(requiredApproval.Username)
-		user.CreateApproveToken(pipeline)
+		user.CreateApproveToken(pipeline, tagDescription)
 	}
 
 	return nil

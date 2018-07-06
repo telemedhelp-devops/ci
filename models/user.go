@@ -7,9 +7,12 @@ import (
 
 	"github.com/markbates/goth"
 	"github.com/sethvargo/go-password/password"
+	"github.com/xaionaro-go/errors"
 	"github.com/xaionaro-go/extime"
 	cfg "gitlab.telemed.help/devops/ci/config"
+	"gitlab.telemed.help/devops/ci/gitlab"
 	"gitlab.telemed.help/devops/ci/sms"
+	"gitlab.telemed.help/devops/ci/smtp"
 )
 
 type User struct {
@@ -28,7 +31,24 @@ func (user User) GetUsername() string {
 	return strings.ToLower(user.GitLabUser.NickName)
 }
 
-func (user *User) CreateApproveToken(pipeline Pipeline) error {
+func (user User) GetEmail() (string, error) {
+	gitlabUser, err := gitlab.GetUserByName(user.GitLabUser.NickName)
+	if err != nil {
+		return "", err
+	}
+	return gitlabUser.Email, nil
+}
+
+func (user *User) SendEmail(subject, message string) error {
+	emailAddress, err := user.GetEmail()
+	if err != nil {
+		return errors.CannotGetInfo.New(err, fmt.Sprintf("Cannot get email of the user"), *user)
+	}
+
+	return smtp.Send(emailAddress, subject, message)
+}
+
+func (user *User) CreateApproveToken(pipeline Pipeline, releaseDescription string) error {
 	randomValue, err := password.Generate(32, 10, 0, false, false)
 	if err != nil {
 		return err
@@ -46,7 +66,7 @@ func (user *User) CreateApproveToken(pipeline Pipeline) error {
 	)
 	message := title + fmt.Sprintf(" using URL: %v", cfg.Get().BaseURL+"/simpleApi/approveUsingToken/"+randomValue)
 	user.SendNotification(title, message)
-	return nil
+	return user.SendEmail(title, message+"\n\n"+releaseDescription)
 }
 
 func (user *User) ApprovePipeline(pipelineId int) error {
