@@ -28,6 +28,7 @@ type Pipeline struct {
 	Success          *bool        `reform:"success"`
 	CreatedAt        *extime.Time `reform:"created_at"`
 	ApprovedAt       *extime.Time `reform:"approved_at"`
+	DeployStartedAt  *extime.Time `reform:"deploy_started_at"`
 	DeletedAt        *extime.Time `reform:"deleted_at"`
 
 	Approvals         Approvals         `reform:"-"`
