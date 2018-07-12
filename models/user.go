@@ -9,8 +9,10 @@ import (
 	"github.com/sethvargo/go-password/password"
 	"github.com/xaionaro-go/errors"
 	"github.com/xaionaro-go/extime"
+	"github.com/xaionaro-go/log"
 	cfg "gitlab.telemed.help/devops/ci/config"
 	"gitlab.telemed.help/devops/ci/gitlab"
+	"gitlab.telemed.help/devops/ci/slack"
 	"gitlab.telemed.help/devops/ci/sms"
 	"gitlab.telemed.help/devops/ci/smtp"
 )
@@ -107,7 +109,11 @@ func (user *User) ApprovePipeline(pipelineId int) error {
 		return nil
 	}
 
-	return pipeline.Approve()
+	err = pipeline.Approve()
+	if slackErr := slack.Send(fmt.Sprintf("User %v approved pipeline %v", user.GetUsername(), pipeline.InfoMarkdown())); slackErr != nil {
+		log.Errorf("Cannot send to Slack/Mattermost: %v", slackErr)
+	}
+	return err
 }
 
 func (user User) GetProfile() *UserProfile {

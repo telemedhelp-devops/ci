@@ -13,6 +13,7 @@ import (
 	"github.com/xaionaro-go/log"
 	cfg "gitlab.telemed.help/devops/ci/config"
 	"gitlab.telemed.help/devops/ci/gitlab"
+	"gitlab.telemed.help/devops/ci/slack"
 	"gitlab.telemed.help/devops/ci/smtp"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -193,6 +194,8 @@ func (pipeline Pipeline) WaitForDescription() error {
 }
 
 func (pipeline Pipeline) AskApproversForApprovals() error {
+	c := cfg.Get()
+
 	unsatisfiedGroups := pipeline.GetUnsatisfiedGroups()
 	if len(unsatisfiedGroups) == 0 {
 		return nil
@@ -219,6 +222,30 @@ func (pipeline Pipeline) AskApproversForApprovals() error {
 		user.CreateApproveToken(pipeline, tagDescription)
 	}
 
+	// Sending the message into Slack/Mattermost:
+
+	groups := map[int][]string{}
+	for _, requiredApproval := range requiredApprovals {
+		groups[requiredApproval.ApprovementGroupId] = append(groups[requiredApproval.ApprovementGroupId], requiredApproval.Username)
+	}
+
+	message := pipeline.TagInfoMarkdown() + " is ready to be deployed.\n\nRequired approvals:\n\n"
+
+	for _, group := range groups {
+		message += " * " + strings.Join(group, " or ")
+	}
+
+	message += fmt.Sprintf("\n\nApprove URL: %v/simpleApi/approve/%v", c.BaseURL, pipeline.Id)
+
+	if tagDescription != "" {
+		message += "\n\nRelease description:\n" + tagDescription
+	}
+
+	err = slack.Send(message)
+	if err != nil {
+		log.Errorf("Cannot send the message to Slack: %v", err)
+	}
+
 	return nil
 }
 
@@ -236,5 +263,26 @@ func (pipeline *Pipeline) Approve() error {
 
 	message := fmt.Sprintf(`Deployment of %v/%v has been approved`, pipeline.ProjectName, pipeline.TagName)
 	pipeline.NotifyEverybody(message, message)
+	err = slack.Send(fmt.Sprintf(`Deployment of %v has been approved.`, pipeline.TagInfoMarkdown()))
+	if err != nil {
+		log.Errorf("Cannot send the message to Slack: %v", err)
+	}
 	return nil
+}
+
+func (pipeline *Pipeline) InfoMarkdown() string {
+	gitlabUrl := cfg.Get().GitLab.URL
+	return fmt.Sprintf("[%v](%v/%v/%v/pipelines/%v): %v",
+		pipeline.GitlabPipelineId,
+		gitlabUrl, pipeline.GitlabNamespace, pipeline.ProjectName, pipeline.GitlabPipelineId,
+		pipeline.TagInfoMarkdown(),
+	)
+}
+
+func (pipeline *Pipeline) TagInfoMarkdown() string {
+	gitlabUrl := cfg.Get().GitLab.URL
+	return fmt.Sprintf("[%v/%v %v](%v/%v/%v/tags/%v)",
+		pipeline.GitlabNamespace, pipeline.ProjectName, pipeline.TagName,
+		gitlabUrl, pipeline.GitlabNamespace, pipeline.ProjectName, pipeline.TagName,
+	)
 }

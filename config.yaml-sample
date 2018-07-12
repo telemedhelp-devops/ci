@@ -27,3 +27,8 @@ db:
 smtp:
   host: localhost
   from_address: noreply@ci.myorganization.com
+slack:
+  hook_url: https://mattermost.myorganization.com/hooks/lk8nere74qb1aehqamt6vnz8t7
+  username: 'CI'
+  channel: '#devops'
+  icon_emoji: ':monkey_face:'

@@ -33,6 +33,13 @@ type JiraCfg struct {
 	IssuesRegexp string `yaml:"issues_regexp"`
 }
 
+type SlackCfg struct {
+	HookURL   string `yaml:"hook_url"`
+	Username  string `yaml:"username"`
+	Channel   string `yaml:"channel"`
+	IconEmoji string `yaml:"icon_emoji"`
+}
+
 type Config struct {
 	IsDev             bool      `yaml:"development_mode"`
 	BaseURL           string    `yaml:"base_url"`
@@ -45,6 +52,7 @@ type Config struct {
 	Db                DbCfg     `yaml:"db"`
 	Smtp              SmtpCfg   `yaml:"smtp"`
 	Jira              JiraCfg   `yaml:"jira"`
+	Slack             SlackCfg  `yaml:"slack"`
 	NotificationEmail string    `yaml:"notification_email"`
 }
 

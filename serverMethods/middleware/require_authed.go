@@ -5,34 +5,53 @@ import (
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"gitlab.telemed.help/devops/ci/gitlabAuth"
 	m "gitlab.telemed.help/devops/ci/models"
 	"net/http"
 )
 
-func RequireAuthed(c *gin.Context) {
+var (
+	ErrAuthRequired = fmt.Errorf("Authorization required")
+)
+
+func trySetUser(c *gin.Context) error {
 	session := sessions.Default(c)
 	userJson, ok := session.Get("User").(string)
 	if !ok {
-		fmt.Println("user", session.Get("User"))
-		c.Abort()
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"Error": "Authorization required",
-		})
-		return
+		return ErrAuthRequired
 	}
 
 	var user m.User
 	err := json.Unmarshal(([]byte)(userJson), &user)
 	if err != nil {
-		c.Abort()
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"Error": "Authorization required (cannot unserialize user data): " + err.Error(),
-		})
-		return
+		return fmt.Errorf("Authorization required (cannot unserialize user data): %v", err.Error())
 	}
 
 	c.Set("User", user)
+	return nil
+}
+
+func RequireAuthed(c *gin.Context) {
+	err := trySetUser(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"Error": err.Error(),
+		})
+		c.Abort()
+		return
+	}
 
 	c.Next()
-	return
+}
+
+func RequireAuthedOrRedirect(c *gin.Context) {
+	err := trySetUser(c)
+	if err != nil {
+		// redirect
+		gitlabAuth.Login(c)
+		c.Abort()
+		return
+	}
+
+	c.Next()
 }

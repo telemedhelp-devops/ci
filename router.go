@@ -31,6 +31,8 @@ func setupJSONRouter(r *gin.Engine) {
 
 	authed := r.Group("/")
 	authed.Use(mw.RequireAuthed) // some routines for an already authed
+	authedOrRedirect := r.Group("/")
+	authedOrRedirect.Use(mw.RequireAuthedOrRedirect)
 
 	// Auth
 	r.GET("/auth/gitlab/login", gitlabAuth.Login)
@@ -40,6 +42,7 @@ func setupJSONRouter(r *gin.Engine) {
 	r.GET("/ping.json", m.Ping)
 	r.GET("/simpleApi/wantToDeploy/:project/:tag", m.WantToDeploy)
 	r.GET("/simpleApi/whatToDeploy", m.WhatToDeploy)
+	authedOrRedirect.GET("/simpleApi/approve/:pipeline_id", m.Approve)
 	r.GET("/simpleApi/approveUsingToken/:token", m.ApproveUsingToken)
 	r.GET("/simpleApi/setSuccess/:gitlab_pipeline_id", m.SetSuccess)
 	r.GET("/simpleApi/setFailure/:gitlab_pipeline_id", m.SetFailure)

@@ -8,13 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/xaionaro-go/extime"
 	logger "github.com/xaionaro-go/log"
-	cfg "gitlab.telemed.help/devops/ci/config"
+	"gitlab.telemed.help/devops/ci/config"
 	"gitlab.telemed.help/devops/ci/gitlab"
 	"gitlab.telemed.help/devops/ci/models"
+	"gitlab.telemed.help/devops/ci/slack"
 	"gitlab.telemed.help/devops/ci/smtp"
 )
 
 func SetPipelineSuccessStatus(c *gin.Context, v bool) {
+	cfg := config.Get()
+
 	pipelineIdStr := c.Param("gitlab_pipeline_id")
 	pipelineId, err := strconv.Atoi(pipelineIdStr)
 	if err != nil {
@@ -30,6 +33,28 @@ func SetPipelineSuccessStatus(c *gin.Context, v bool) {
 			"error": err.Error(),
 		})
 		return
+	}
+
+	var slackErr error
+	if v == true {
+		tagDescription := ""
+		tag, err := gitlab.GetTag(pipeline.GitlabNamespace+"/"+pipeline.ProjectName, pipeline.TagName)
+		if err != nil {
+			logger.Errorf("Cannot get the tag info from the gitlab: %v", err)
+		} else {
+			if tag.Release == nil {
+				tagDescription = tag.Release.Description
+			} else {
+				logger.Errorf("Cannot get the release description")
+			}
+		}
+
+		slackErr = slack.Send("Deployed (pipeline " + pipeline.InfoMarkdown() + ")\n\n" + tagDescription)
+	} else {
+		slackErr = slack.Send("Failed to deploy (pipeline " + pipeline.InfoMarkdown() + ")")
+	}
+	if slackErr != nil {
+		logger.Errorf("Cannot send to the slack/mattermost: %v", slackErr)
 	}
 
 	pipeline.DeletedAt = &[]extime.Time{extime.Now()}[0]
@@ -54,7 +79,7 @@ func SetPipelineSuccessStatus(c *gin.Context, v bool) {
 		tagDescription = tag.Release.Description
 	}
 
-	notificationEmail := cfg.Get().NotificationEmail
+	notificationEmail := cfg.NotificationEmail
 
 	title := fmt.Sprintf(`"%v/%v" has been deployed`, pipeline.ProjectName, pipeline.TagName)
 	message := title + ".\n\n" + tagDescription
