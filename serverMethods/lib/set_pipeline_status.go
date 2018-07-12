@@ -81,7 +81,12 @@ func SetPipelineSuccessStatus(c *gin.Context, v bool) {
 
 	notificationEmail := cfg.NotificationEmail
 
-	title := fmt.Sprintf(`"%v/%v" has been deployed`, pipeline.ProjectName, pipeline.TagName)
+	title := fmt.Sprintf(`Деплой %v/%v %v (%v)`,
+		pipeline.GitlabNamespace,
+		pipeline.ProjectName,
+		pipeline.TagName,
+		extime.Date(extime.Now()),
+	)
 	message := title + ".\n\n" + tagDescription
 	smtp.Send(notificationEmail, title, message)
 

@@ -263,7 +263,7 @@ func (pipeline *Pipeline) Approve() error {
 
 	message := fmt.Sprintf(`Deployment of %v/%v has been approved`, pipeline.ProjectName, pipeline.TagName)
 	pipeline.NotifyEverybody(message, message)
-	err = slack.Send(fmt.Sprintf(`Deployment of %v has been approved.`, pipeline.TagInfoMarkdown()))
+	err = slack.Send(fmt.Sprintf(`Deployment of %v has been approved (pipeline: %v)`, pipeline.TagInfoMarkdown(), pipeline.InfoMarkdown()))
 	if err != nil {
 		log.Errorf("Cannot send the message to Slack: %v", err)
 	}
