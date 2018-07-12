@@ -232,7 +232,7 @@ func (pipeline Pipeline) AskApproversForApprovals() error {
 	message := pipeline.TagInfoMarkdown() + " is ready to be deployed.\n\nRequired approvals:\n\n"
 
 	for _, group := range groups {
-		message += " * " + strings.Join(group, " or ")
+		message += " * " + strings.Join(group, " or ") + "\n"
 	}
 
 	message += fmt.Sprintf("\n\nApprove URL: %v/simpleApi/approve/%v", c.BaseURL, pipeline.Id)
