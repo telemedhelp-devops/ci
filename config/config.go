@@ -40,6 +40,10 @@ type SlackCfg struct {
 	IconEmoji string `yaml:"icon_emoji"`
 }
 
+type Developer struct {
+	Email string `yaml:"email"`
+}
+
 type Config struct {
 	IsDev             bool      `yaml:"development_mode"`
 	BaseURL           string    `yaml:"base_url"`
@@ -54,6 +58,7 @@ type Config struct {
 	Jira              JiraCfg   `yaml:"jira"`
 	Slack             SlackCfg  `yaml:"slack"`
 	NotificationEmail string    `yaml:"notification_email"`
+	DefaultDeveloper  Developer `yaml:"default_developer"`
 }
 
 var cfg Config

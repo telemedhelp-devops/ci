@@ -1,6 +1,8 @@
 package main
 
 import (
+	"database/sql"
+
 	"github.com/gin-gonic/gin"
 	cfg "gitlab.telemed.help/devops/ci/config"
 	db "gitlab.telemed.help/devops/ci/db"
@@ -48,5 +50,14 @@ func main() {
 
 	r := gin.Default()
 	setupRouter(r)
+
+	pipelines, err := models.PipelineSQL.Select("approved_at IS NULL AND deleted_at IS NULL")
+	if err != nil && err != sql.ErrNoRows {
+		checkError(err)
+	}
+	for _, pipeline := range pipelines {
+		pipeline.RunWaiterForDescription()
+	}
+
 	r.Run()
 }

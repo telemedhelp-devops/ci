@@ -32,3 +32,5 @@ slack:
   username: 'CI'
   channel: '#devops'
   icon_emoji: ':monkey_face:'
+default_developer:
+  email: 'developer@myorganization.com'

@@ -86,6 +86,10 @@ func (user *User) ApprovePipeline(pipelineId int) error {
 		return fmt.Errorf(`Cannot fetch the pipeline info: %v`, err.Error())
 	}
 
+	if slackErr := slack.Send(fmt.Sprintf("User %v approved pipeline %v", user.GetUsername(), pipeline.InfoMarkdown())); slackErr != nil {
+		log.Errorf("Cannot send to Slack/Mattermost: %v", slackErr)
+	}
+
 	unsatisfiedGroups := pipeline.GetUnsatisfiedGroups()
 	if len(unsatisfiedGroups) > 0 {
 		reqApproval, err := RequiredApprovalSQL.First(RequiredApproval{ProjectName: pipeline.ProjectName, Username: user.GetUsername()})
@@ -103,16 +107,13 @@ func (user *User) ApprovePipeline(pipelineId int) error {
 
 		for _, neighbor := range neighborsInGroup {
 			notifableUser := GetUserByUsername(neighbor.Username)
-			message := fmt.Sprintf("User %v has already approved the deployment of %v/%v", pipeline.ProjectName, pipeline.TagName)
+			message := fmt.Sprintf("User %v has already approved the deployment of %v/%v", user.GetUsername(), pipeline.ProjectName, pipeline.TagName)
 			notifableUser.SendNotification(message, message)
 		}
 		return nil
 	}
 
 	err = pipeline.Approve()
-	if slackErr := slack.Send(fmt.Sprintf("User %v approved pipeline %v", user.GetUsername(), pipeline.InfoMarkdown())); slackErr != nil {
-		log.Errorf("Cannot send to Slack/Mattermost: %v", slackErr)
-	}
 	return err
 }
 

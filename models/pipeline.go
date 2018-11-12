@@ -170,7 +170,12 @@ func (pipeline Pipeline) AskAuthorForDescription() error {
 
 	email, err := pipeline.GetCommiterEmail()
 	if err != nil {
-		return err
+		email = cfg.Get().DefaultDeveloper.Email
+		log.Errorf("Unable to get developer's email for %v/%v: %s",
+			pipeline.ProjectName,
+			pipeline.TagName,
+			err.Error(),
+		)
 	}
 
 	return smtp.Send(email, title, message)
@@ -181,13 +186,15 @@ func (pipeline Pipeline) WaitForDescription() error {
 		time.Sleep(time.Second * 5)
 
 		tag, err := gitlab.GetTag(pipeline.GitlabNamespace+"/"+pipeline.ProjectName, pipeline.TagName)
-		if err != nil {
+		if err != nil && (err.(*gitlab.ErrorResponse).Response == nil || err.(*gitlab.ErrorResponse).Response.StatusCode != 404) {
 			return errors.CannotGetInfo.New(err, fmt.Sprintf("Cannot get tag description"), pipeline)
 		}
 
-		if tag.Release != nil {
-			if tag.Release.Description != "" {
-				return nil
+		if tag != nil {
+			if tag.Release != nil {
+				if tag.Release.Description != "" {
+					return nil
+				}
 			}
 		}
 	}
@@ -285,4 +292,22 @@ func (pipeline *Pipeline) TagInfoMarkdown() string {
 		pipeline.GitlabNamespace, pipeline.ProjectName, pipeline.TagName,
 		gitlabUrl, pipeline.GitlabNamespace, pipeline.ProjectName, pipeline.TagName,
 	)
+}
+
+func (pipeline *Pipeline) RunWaiterForDescription() {
+	go func() {
+		err := pipeline.WaitForDescription()
+		if err != nil {
+			log.Errorf("Cannot wait for a description: %v", err.Error())
+		}
+		err = pipeline.AskApproversForApprovals()
+		if err != nil {
+			log.Errorf("Cannot ask approvers for approvals: %v", err.Error())
+			pipeline.DeletedAt = &[]extime.Time{extime.Now()}[0]
+			err := pipeline.Update()
+			if err != nil {
+				log.Errorf("Cannot delete a pipeline: %v", err.Error())
+			}
+		}
+	}()
 }

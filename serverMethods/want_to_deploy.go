@@ -48,21 +48,8 @@ func WantToDeploy(c *gin.Context) {
 		if err != nil {
 			log.Errorf("Cannot ask the author for a description: %v", err.Error())
 		}
-		go func() {
-			err := pipeline.WaitForDescription()
-			if err != nil {
-				log.Errorf("Cannot wait for a description: %v", err.Error())
-			}
-			err = pipeline.AskApproversForApprovals()
-			if err != nil {
-				log.Errorf("Cannot ask approvers for approvals: %v", err.Error())
-				pipeline.DeletedAt = &[]extime.Time{extime.Now()}[0]
-				err := pipeline.Update()
-				if err != nil {
-					log.Errorf("Cannot delete a pipeline: %v", err.Error())
-				}
-			}
-		}()
+
+		pipeline.RunWaiterForDescription()
 	default:
 		c.JSON(502, gin.H{
 			"error": err.Error(),

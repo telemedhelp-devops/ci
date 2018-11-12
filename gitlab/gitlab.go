@@ -10,8 +10,10 @@ import (
 )
 
 type (
-	Tag  = gitlab.Tag
-	User = gitlab.User
+	Tag           = gitlab.Tag
+	User          = gitlab.User
+	Job           = gitlab.Job
+	ErrorResponse = gitlab.ErrorResponse
 )
 
 var (
@@ -46,4 +48,9 @@ func GetUserByName(username string) (*User, error) {
 	}
 
 	return nil, errors.NotFound.New(nil, fmt.Sprintf("User with username %v is not found", username), User{}, username)
+}
+
+func GetJob(projectId int, jobId int) (*Job, error) {
+	job, _, err := client.Jobs.GetJob(projectId, jobId)
+	return job, err
 }
